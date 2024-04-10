@@ -19,7 +19,7 @@ export default function Home() {
         if (product.quantity < cart_product.quantity) {
           cart_product.quantity += 1
           cart_product.total = cart_product.price * cart_product.quantity
-          setGrandTotal((prev)=>prev+cart_product.price)
+          setGrandTotal((prev) => prev + cart_product.price)
         }
 
       }
@@ -27,7 +27,7 @@ export default function Home() {
         if (product.quantity > 0) {
           cart_product = { "id": product.id, "name": product.name, "price": product.price, "quantity": 1, "total": product.price }
           setCart([...cart, cart_product])
-          setGrandTotal((prev)=>prev+cart_product.price)
+          setGrandTotal((prev) => prev + cart_product.price)
         }
       }
     }
@@ -37,16 +37,34 @@ export default function Home() {
         if (cart_product.quantity > 1) {
           cart_product.quantity -= 1
           cart_product.total = cart_product.price * cart_product.quantity
-          setGrandTotal((prev)=>prev-cart_product.price)
+          setGrandTotal((prev) => prev - cart_product.price)
         }
         else {
           let new_cart = cart.filter((product) => product.id != cart_product.id)
           setCart(new_cart)
-          setGrandTotal((prev)=>prev-cart_product.price)
+          setGrandTotal((prev) => prev - cart_product.price)
         }
       }
     }
-    console.log(cart)
+  }
+
+  const HandleOrder = async () => {
+    try {
+      let response = await fetch('http://localhost:3000/api/order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cart)
+      })
+      let data = await response.json()
+      console.log(data)
+      setCart([])
+      setGrandTotal(0)
+    }
+    catch (err) {
+      console.log(err)
+    }
   }
   return (
     <main className="w-screen">
@@ -60,12 +78,12 @@ export default function Home() {
         <div className="w-full flex flex-col p-20 ">
           <h1 className="text-lg font-bold p-4">Cart</h1>
           <div className="w-full flex flex-col gap-12 justify-center items-center p-4">
-          <div className="grid grid-cols-4 text-center w-full text-base-content font-bold">
-            <div>Name</div>
-            <div>Price</div>
-            <div>Quantity</div>
-            <div>Total Price</div>
-          </div>
+            <div className="grid grid-cols-4 text-center w-full text-base-content font-bold">
+              <div>Name</div>
+              <div>Price</div>
+              <div>Quantity</div>
+              <div>Total Price</div>
+            </div>
             {cart.map((product, index) => <CartOrder key={index} product={product} />)}
           </div>
           <div className="w-full flex flex-row justify-between p-4">
@@ -73,7 +91,7 @@ export default function Home() {
             <h1 className="text-lg font-bold">{grandTotal}</h1>
           </div>
           <div className="flex flex-row-reverse">
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => alert("Order Placed")}>Place Order</button>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => HandleOrder()}>Place Order</button>
           </div>
         </div>}
     </main>
