@@ -1,10 +1,22 @@
 "use client";
-import Image from 'next/image'
+import { useEffect,useState } from "react";
+import { Products } from "@/components/Products";
 
 export default function Home() {
+  const [products,setProducts] = useState([])
+  useEffect(() => {
+    fetch('http://localhost:3000/api/products')
+      .then(response => response.json())
+      .then(data => { setProducts(data)})
+  }, [])
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-    
+    <main className="w-screen">
+      <div className="p-20 w-full flex flex-col ">
+        <h1>Products Available</h1>
+        <div className="w-full grid lg:grid-col-4 md:grid-cols-2 grid-cols-1 gap-12 justify-center items-center">
+          {products && products.map((product,index) => <Products key={index} product={product} /> ) }
+        </div>
+      </div>
     </main>
   )
 }
