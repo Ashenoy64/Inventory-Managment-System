@@ -1,5 +1,5 @@
 import psycopg2
-
+import datetime 
 
 class Connector:
 
@@ -7,18 +7,17 @@ class Connector:
         try:
             self.conn=psycopg2.connect(host=host, user=user, password=password)
             cursor=self.conn.cursor()
-            cursor.execute("create table if not exists health(node varchar(20) primary key, status bool not null)")
             
         except Exception as e:
             print(e)
             exit
 
-    def insert(self,node:str,status:bool=False):
+    def insert(self,node:str,checkpoint:datetime):
 
         cursor=self.conn.cursor()
         try:
             
-            cursor.execute("insert into health (node,status) values (%s,%s)",(node,status))
+            cursor.execute("insert into  NodeDetails(node_name,checkpoint) values (%s,%s)",(node,status))
             self.conn.commit()
             print("inserted")
         except Exception as e:
@@ -29,7 +28,7 @@ class Connector:
         cursor=self.conn.cursor()
         if node is not None:
             try:
-                result=cursor.execute("select * from health").fetchall()
+                result=cursor.execute("select * from NodeDetails").fetchall()
                 return result
             except Exception as e:
                 print(e)
@@ -37,7 +36,7 @@ class Connector:
 
         else:
             try:
-                result=cursor.execute("select * from health where node=(%s)",(node,)).fetchall()
+                result=cursor.execute("select * from NodeDetails where node=(%s)",(node,)).fetchall()
                 return result
             except Exception as e:
                 print(e)

@@ -14,5 +14,5 @@ def process_message(boady):
     Database.insert(boady["node"],boady["status"])
 
 
-Database.get()
+
 Consumer.consume(process_message)
