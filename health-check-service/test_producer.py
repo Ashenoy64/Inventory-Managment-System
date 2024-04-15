@@ -1,11 +1,8 @@
 import rabbitmq_connector
-
+import datetime
 
 connector=rabbitmq_connector.Connector(port=5672,queue="Test")
 
-a=0
-while True:
-    connector.produce({"node":"Test{}".format(a),"status":False})
-    a+=1
+connector.produce({"id":1,"node":"node1","checkpoint":str(datetime.datetime.now())})
 print("sent")
     

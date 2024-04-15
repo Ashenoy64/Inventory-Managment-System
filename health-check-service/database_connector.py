@@ -17,10 +17,10 @@ class Connector:
             print(e)
             exit
 
-    def upsert(self,node:str,checkpoint:datetime):
+    def upsert(self,node_id:int,node_name:str,checkpoint:datetime):
         cursor=self.conn.cursor()
         try:
-            cursor.execute("insert into  NodeDetails(node_name,checkpoint) values (%s,%s) on conflict(node_name) do update set checkpoint=%s",(node,checkpoint,checkpoint))
+            cursor.execute("insert into  nodedetails(id,node_name,checkpoint) values (%s,%s,%s) on conflict(id,node_name) do update set checkpoint=%s",(node_id,node_name,checkpoint,checkpoint))
             print("UPSERTED NODE STATUS ")
             self.conn.commit()
         except Exception as e:
