@@ -16,11 +16,21 @@ CREATE TABLE NodeDetails (
 -- Create the Order table
 CREATE TABLE OrderDetails (
     id SERIAL PRIMARY KEY,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL,
     order_date DATE NOT NULL,
     status VARCHAR(255) NOT NULL,
+);
+
+-- Order Items Table
+CREATE TABLE OrderItems(
+    id SERIAL PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES OrderDetails (id),
     FOREIGN KEY (product_id) REFERENCES Products (id)
 );
 
-INSERT INTO Products (name, price, quantity) VALUES ('Product A', 10.99, 100), ('Product B', 15.99, 50), ('Product C', 5.99, 200);
+
+-- Node will already be having the details in built 
+-- Update or insert Node Details
+INSERT INTO NodeDetails (id,node_name, checkpoint) VALUES ('Node1', '2021-01-01 00:00:00');

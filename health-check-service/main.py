@@ -1,10 +1,8 @@
 import database_connector
 import rabbitmq_connector
 
-
-
 Consumer=rabbitmq_connector.Connector(port=5672,queue="Test")
-Database=database_connector.Connector(database="Test")
+Database=database_connector.Connector()
 
 
 

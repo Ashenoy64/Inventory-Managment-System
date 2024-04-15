@@ -1,4 +1,3 @@
-
 import pika
 import json
 
@@ -9,8 +8,6 @@ class Connector:
             self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=host,port=port))
 
     
-
-
         def consume(self, user_callback):
             channel = self.connection.channel()
 
