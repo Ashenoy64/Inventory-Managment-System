@@ -24,12 +24,11 @@ def send_heart_beat(mq_connection):
 
     data = { 
         "id": NODE_ID,
-        "node_name": NODE_NAME,
+        "node": NODE_NAME,
         "checkpoint": str(datetime.datetime.now()),
     }
     try:
         channel.basic_publish(exchange='', routing_key=RABBITMQ_QUEUE, body=json.dumps(data))
-        print("Sent ",data)
     except Exception as e:
         print(e)
     pass
