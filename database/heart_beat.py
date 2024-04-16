@@ -18,7 +18,7 @@ RABBITMQ_PORT = os.getenv('RABBITMQ_PORT')
 
 INTERVAL = os.getenv('INTERVAL')
 
-def send_heart_beat(mq_conection):
+def send_heart_beat(mq_connection):
     channel = mq_connection.channel()
     channel.queue_declare(queue=RABBITMQ_QUEUE)
 
@@ -27,8 +27,6 @@ def send_heart_beat(mq_conection):
         "node_name": NODE_NAME,
         "checkpoint": str(datetime.datetime.now()),
     }
-
-
     try:
         channel.basic_publish(exchange='', routing_key=RABBITMQ_QUEUE, body=json.dumps(data))
         print("Sent ",data)
