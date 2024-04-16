@@ -13,59 +13,69 @@ export default function Home() {
   }, [])
 
   const HandleButton = (ops, product) => {
-    if (ops == "add") {
-      let cart_product = cart.find((product) => product.id == product.id)
-      if (cart_product) {
-        if (product.quantity < cart_product.quantity) {
-          cart_product.quantity += 1
-          cart_product.total = cart_product.price * cart_product.quantity
-          setGrandTotal((prev) => prev + cart_product.price)
+    if (ops === "add") {
+      let cartProduct = cart.find((item) => item.id === product.id);
+      if (cartProduct) {
+        if (product.quantity > cartProduct.quantity) {
+          cartProduct.quantity += 1;
+          cartProduct.total = cartProduct.price * cartProduct.quantity;
+          setGrandTotal((prev) => prev +parseFloat(cartProduct.price));
         }
-
-      }
-      else {
+      } else {
         if (product.quantity > 0) {
-          cart_product = { "id": product.id, "name": product.name, "price": product.price, "quantity": 1, "total": product.price }
-          setCart([...cart, cart_product])
-          setGrandTotal((prev) => prev + cart_product.price)
+          cartProduct = {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+            total: product.price,
+          };
+          setCart([...cart, cartProduct]);
+          setGrandTotal((prev) => prev +  parseInt(cartProduct.price));
+        }
+      }
+    } else if (ops === "remove") {
+      let cartProduct = cart.find((item) => item.id === product.id);
+      if (cartProduct) {
+        if (cartProduct.quantity > 1) {
+          cartProduct.quantity -= 1;
+          cartProduct.total = cartProduct.price * cartProduct.quantity;
+          setGrandTotal((prev) => prev - cartProduct.price);
+        } else {
+          let newCart = cart.filter((item) => item.id !== cartProduct.id);
+          setCart(newCart);
+          setGrandTotal((prev) => prev - cartProduct.price);
         }
       }
     }
-    else if (ops == "remove") {
-      let cart_product = cart.find((product) => product.id == product.id)
-      if (cart_product) {
-        if (cart_product.quantity > 1) {
-          cart_product.quantity -= 1
-          cart_product.total = cart_product.price * cart_product.quantity
-          setGrandTotal((prev) => prev - cart_product.price)
-        }
-        else {
-          let new_cart = cart.filter((product) => product.id != cart_product.id)
-          setCart(new_cart)
-          setGrandTotal((prev) => prev - cart_product.price)
-        }
-      }
-    }
-  }
+  };
 
   const HandleOrder = async () => {
     try {
-      let response = await fetch('http://localhost:3000/api/order', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(cart)
-      })
-      let data = await response.json()
-      console.log(data)
-      setCart([])
-      setGrandTotal(0)
+        // Send a POST request to the backend API with the cart data
+        let response = await fetch('http://localhost:3000/api/order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({cart}) // Stringify the cart object
+        });
+        
+        // Parse the response from the server
+        let data = await response.json();
+        
+        // Log the response for debugging
+        console.log(data);
+        
+        // Reset the cart and grand total
+        setCart([]);
+        setGrandTotal(0);
+    } catch (err) {
+        // Handle any errors that occur during the request
+        console.log(err);
     }
-    catch (err) {
-      console.log(err)
-    }
-  }
+};
+
   return (
     <main className="w-screen">
       <div className="p-20 w-full flex flex-col gap-2 ">
