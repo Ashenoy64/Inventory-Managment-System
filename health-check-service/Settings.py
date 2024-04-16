@@ -24,5 +24,5 @@ RABBITMQ = {
 NODE ={
     'ID': os.getenv('NODE_ID'),
     'NAME': os.getenv('NODE_NAME'),
-    'INTERVAL': os.getenv('NODE_INTERVAL'),
+    'INTERVAL': int(os.getenv('INTERVAL')),
 }
