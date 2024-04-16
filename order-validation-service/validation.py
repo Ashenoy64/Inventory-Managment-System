@@ -31,7 +31,7 @@ def send_heart_beat(mq_connection):
 
     data = { 
         "id": NODE_ID,
-        "node_name": NODE_NAME,
+        "node": NODE_NAME,
         "checkpoint": str(datetime.datetime.now()),
     }
     try:
@@ -53,17 +53,30 @@ def life():
 
 
 def add_order(cart,status="pending"):
-    query = "INSERT INTO OrderDetails (order_date,status) VALUES (%s,%s) returning id"
-    order_id = Database.execute_and_return(query,(datetime.datetime.now(),status))[0][0]
+    try:
+        total_price = sum(map(lambda x: float(x['total']),cart))
+        query = "INSERT INTO OrderDetails (order_date,status,total) VALUES (%s,%s,%s) returning id"
+        
+        order_id = Database.execute_and_return(query,(datetime.datetime.now(),status,total_price))[0][0]
 
-    query = "INSERT INTO OrderItems (order_id,product_id,quantity) VALUES (%s,%s,%s,%s)"
-    for item in cart:
-        Database.execute(query,(order_id,item['id'],item['quantity']))
-    
+        add_query = "INSERT INTO OrderItems (order_id,product_id,quantity) VALUES (%s,%s,%s)"
+        update_query = "UPDATE products SET quantity = quantity - %s WHERE id = %s"
+        for item in cart:
+            Database.execute(add_query,(order_id,item['id'],item['quantity']))
+            Database.execute(update_query,(item['quantity'],item['id']))
+        Database.connection.commit()
+    except Exception as e:
+        print(e)
+        Database.connection.rollback()
+        
     if status == "Success":
-        total_price = sum(map(lambda x: int(x['total']),cart))
-
-    pass
+        query = "UPDATE DATA_REPORT SET revenue= revenue + %s "
+        try:
+            Database.execute(query,(total_price,))
+            Database.connection.commit()
+        except Exception as e:
+            print(e)
+            Database.connection.rollback()
 
 
 
@@ -74,10 +87,10 @@ def validate_order(order):
     for item in cart:
         products.append(item['id'])
 
-    query = "SELECT id, quantity,price FROM products WHERE id IN (%s)"
-
-    database_data = Database.execute_and_return(query,(','.join([str(k) for k in products]),))
-
+    query = "SELECT id, quantity, price FROM products WHERE id IN (%s)"
+    placeholders = ','.join(['%s' for _ in products])
+    database_data = Database.execute_and_return(query % placeholders, products)
+    
     valid_items = []
     invalid_items = [] 
     for item in cart:
