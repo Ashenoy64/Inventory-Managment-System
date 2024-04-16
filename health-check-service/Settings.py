@@ -13,3 +13,16 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT'),
     }
 }
+
+RABBITMQ = {
+    'HOST': os.getenv('RABBITMQ_HOST'),
+    'PORT': os.getenv('RABBITMQ_PORT'),
+    'QUEUE': os.getenv('RABBITMQ_QUEUE'),
+}
+
+
+NODE ={
+    'ID': os.getenv('NODE_ID'),
+    'NAME': os.getenv('NODE_NAME'),
+    'INTERVAL': os.getenv('NODE_INTERVAL'),
+}
