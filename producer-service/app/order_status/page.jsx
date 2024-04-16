@@ -33,9 +33,10 @@ export default function OrderStatus() {
       <div className="p-20 w-full flex flex-col ">
         <h1 className="text-lg font-bold p-4">Order status</h1>
         <div className="w-full flex flex-col gap-12 justify-center items-center">
-          <div className="grid grid-cols-3 text-center w-full text-base-content font-bold">
+          <div className="grid grid-cols-4 text-center w-full text-base-content font-bold">
             <div>Order ID</div>
             <div>Order Date</div>
+            <div>Price ₹</div>
             <div>Status</div>
           </div>
           {orderData &&

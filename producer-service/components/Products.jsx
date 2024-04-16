@@ -4,6 +4,7 @@ export function Products({ product, button }) {
       <div className="card-body">
         <h2 className="card-title">{product.name}</h2>
         <p>₹{product.price}</p>
+        <p>Currently in stock : {product.quantity}</p>
         <div className="card-actions justify-end">
           <button
             className="btn w-12 font-bold text-xl "
