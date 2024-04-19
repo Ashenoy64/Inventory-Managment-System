@@ -2,9 +2,8 @@ import streamlit as st
 import backend
 import os 
 import dotenv
-import pika
 import rabbitmq_connector
-
+import threading
 
 dotenv.load_dotenv()
 
@@ -183,6 +182,8 @@ def products():
        
 
 if __name__ == "__main__":
+    if 'health' not in st.session_state:
+        st.session_state.health = threading.Thread(target=backend.life)
     if 'producer' not in st.session_state:
         st.session_state.producer = rabbitmq_connector.Connector(port=os.getenv("RABBITMQ_PORT"),queue=os.getenv("RABBITMQ_QUEUE_PRODUCT"),host=os.getenv("RABBITMQ_HOST"))
     st.title("Product Management Service",anchor="top")

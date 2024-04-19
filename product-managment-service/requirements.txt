@@ -1,3 +1,4 @@
 pika 
 dotenv
 streamlit
+psycopg2
