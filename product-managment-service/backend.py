@@ -11,33 +11,56 @@ Database = database_connector.DatabaseConnector(host=os.getenv('DB_HOST'),port=o
 
 
 def get_empty_stock():
-    query = "SELECT id,quantity FROM products WHERE quantity = 0"
+    query = "SELECT * FROM products WHERE quantity = 0"
     return Database.execute_and_return(query,())
 
 def get_failed_orders():
-    query = "SELECT id,cart FROM orders WHERE status = 'Failed'"
+    query = "SELECT id,order_date,total FROM orderdetails WHERE status = 'Failed'"
     return Database.execute_and_return(query,())
 
-def restock_product(product_id,quantity):
-    query = "UPDATE products SET quantity = quantity + %s WHERE id = %s"
-    Database.execute(query,(quantity,product_id))
+
+
+def get_success_stock():
+    query = "SELECT id,order_date,total FROM orderdetails WHERE status = 'Success'"
+    return Database.execute_and_return(query,())
+
 
 def get_product():
-    query = "SELECT id,quantity,price FROM products"
+    query = "SELECT * FROM products"
     return Database.execute_and_return(query,())
 
-def add_new_product(name,quantity,price):
-    query = "INSERT INTO products(name,quantity,price) VALUES (%s,%s,%s) RETURNING id"
-    try:
-        Database.execute(query,(name,quantity,price))[0][0]  
-        Database.connection.commit() 
-        return True
-    except Exception as e:
-        print(e)
-        Database.connection.rollback()  
-        return False
 
+def restock_product(product_id,quantity,mq_connection):
+    data = {
+        'ops':'update',
+        'id':product_id,
+        'quantity':quantity
+    }
+    mq_connection.produce(data)
+    
+    pass
+def add_new_product(name,quantity,price,mq_connection):
+    data = {
+        'ops':'add',
+        'name':name,
+        'quantity':quantity,
+        'price':price
+    }
+    mq_connection.produce(data)
 
+    pass
+
+def get_report():
+    data ={}
+    query = "SELECT invested,revenue FROM data_report "
+    data["report"] = Database.execute_and_return(query,())[0]
+    query = "SELECT count(*) FROM orderdetails"
+    data["orders"] = int(Database.execute_and_return(query,())[0][0])
+    query = "SELECT sum(quantity) FROM products"
+    data["products"] = int(Database.execute_and_return(query,())[0][0])
+    return data
+
+    
 
 
 def heartbeat(mq_connection):
