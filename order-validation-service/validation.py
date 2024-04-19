@@ -45,11 +45,7 @@ def life():
     while True:
         send_heart_beat(producer)
 
-"""
-{'cart': [{'id': 1, 'name': 'P1', 'price': '10.00', 'quantity': 1, 'total': '10.00'}]}
-{'cart': [{'id': 1, 'name': 'P1', 'price': '10.00', 'quantity': 2, 'total': 20}, {'id': 2, 'name': 'Pespi', 'price': '2.00', 'quantity': 2, 'total': 4}]}
 
-"""
 
 
 def add_order(cart,status="pending"):
@@ -116,10 +112,10 @@ if __name__ == "__main__":
     Consumer=rabbitmq_connector.Connector(port=RABBITMQ_PORT,queue=RABBITMQ_QUEUE_VALIDATION,host=RABBITMQ_HOST)
     Database=database_connector.DatabaseConnector(host=DB_HOST,port=DB_PORT,user=DB_USER,password=DB_PASS,database=DB_NAME)
     try:
-        #th = threading.Thread(target=life)
-        #th.start() 
+        th = threading.Thread(target=life)
+        th.start() 
         Consumer.consume(validate_order)
-        #th.join()
+        th.join()
     except KeyboardInterrupt as e:
         print("Exiting")
         Consumer.connection.close()
