@@ -52,5 +52,21 @@ CREATE TABLE DATA_REPORT{
 }   
 
 
--- Node will already be having the details in built 
--- Update or insert Node Details
+-- Staring products
+INSERT INTO Products (name, price, quantity) VALUES ('Apple', 50, 100);
+INSERT INTO Products (name, price, quantity) VALUES ('Banana', 30, 200);
+INSERT INTO Products (name, price, quantity) VALUES ('Cherry', 75, 50);
+INSERT INTO Products (name, price, quantity) VALUES ('Date', 10, 500);
+INSERT INTO Products (name, price, quantity) VALUES ('Elderberry', 25, 300);
+INSERT INTO Products (name, price, quantity) VALUES ('Fig', 15, 400);
+INSERT INTO Products (name, price, quantity) VALUES ('Grape', 20, 600);
+INSERT INTO Products (name, price, quantity) VALUES ('Honeydew', 35, 150);
+INSERT INTO Products (name, price, quantity) VALUES ('Jackfruit', 45, 75);
+INSERT INTO Products (name, price, quantity) VALUES ('Kiwi', 55, 125);
+INSERT INTO Products (name, price, quantity) VALUES ('Lemon', 40, 250);
+INSERT INTO Products (name, price, quantity) VALUES ('Mango', 65, 100);
+INSERT INTO Products (name, price, quantity) VALUES ('Nectarine', 70, 50);
+INSERT INTO Products (name, price, quantity) VALUES ('Orange', 30, 300);
+INSERT INTO Products (name, price, quantity) VALUES ('Papaya', 80, 75);
+INSERT INTO Products (name, price, quantity) VALUES ('Quince', 90, 25);
+INSERT INTO Products (name, price, quantity) VALUES ('Raspberry', 95, 150);
