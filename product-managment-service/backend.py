@@ -32,23 +32,34 @@ def get_product():
     return Database.execute_and_return(query, ())
 
 
-def restock_product(product_id, quantity, mq_connection):
+def restock_product(product_id, quantity,price, mq_connection):
     data = {
         'ops': 'update',
         'id': product_id,
-        'quantity': quantity
+        'quantity': quantity,
+        'cost': price,
+        'price': price * 1+os.getenv('PROFIT_MARGIN'),
     }
     mq_connection.produce(data)
 
     pass
 
 
+def get_order_count():
+    query = "SELECT order_date,count(*) FROM orderdetails GROUP BY order_date"
+    return Database.execute_and_return(query, ())
+
+def get_product_count():
+    query = "SELECT  name,sum(orderitems.quantity) FROM products JOIN orderitems ON products.id = orderitems.product_id GROUP BY name"
+    return Database.execute_and_return(query, ())
+
 def add_new_product(name, quantity, price, mq_connection):
     data = {
         'ops': 'add',
         'name': name,
         'quantity': quantity,
-        'price': price
+        'cost': price,
+        'price': price * 1+os.getenv('PROFIT_MARGIN'),
     }
     mq_connection.produce(data)
 

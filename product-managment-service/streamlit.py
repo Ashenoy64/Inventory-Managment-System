@@ -30,6 +30,24 @@ def dashboard():
         with col3:
             st.metric("Profit",value=f"{revenue-investment} ₹",delta_color="inverse")
         pass
+
+    with st.container():
+        choice = st.selectbox("Select Product",["Order Trend",'Popular Product'])
+        if choice == "Order Trend":
+            order_trend = backend.get_order_count()
+            with st.container():
+                data_dict = {str(date): count for date, count in order_trend}
+                st.line_chart(data_dict)
+                pass
+            pass
+        elif choice == "Popular Product":
+            product_trend = backend.get_product_count()
+            with st.container():
+                sorted_data = sorted(product_trend, key=lambda x: x[1], reverse=True)
+                top_items = sorted_data[:10]
+                data_dict = {name: count for name, count in top_items}
+                st.bar_chart(data_dict)
+            pass
         
 
 def orders():
@@ -163,9 +181,11 @@ def products():
 
         if (product_name):
             product_id = [product[0] for product in products if product[1]==product_name][0]
+            
+            price = st.number_input("Price")
             quantity = st.number_input("Quantity",step=1,min_value=1)
             if st.button("Restock"):
-                backend.restock_product(product_id,quantity,st.session_state.producer)
+                backend.restock_product(product_id,quantity,price,st.session_state.producer)
         # quantity = st.number_input("Quantity")
         # if st.button("Restock"):
         #     backend.restock_product(product_id,quantity,st.session_state.producer)

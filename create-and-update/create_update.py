@@ -58,11 +58,19 @@ def create_update(detail):
             query = "INSERT INTO products (name,price,quantity) VALUES (%s,%s,%s) "
             Database.execute(
                 query, (detail['name'], detail['price'], detail['quantity']))
+            
+            invested = detail['cost'] * detail['quantity']
+            query = "UPDATE data_report SET invested=invested+%s"
+            Database.execute(query, (invested,))
             Database.connection.commit()
             pass
         elif ops == 'update':
-            query = "UPDATE products SET quantity=%s WHERE id=%s"
-            Database.execute(query, (detail['quantity'], detail['id']))
+            query = "UPDATE products SET quantity=%s,price=%s WHERE id=%s"
+            
+            Database.execute(query, (detail['quantity'],detail['price'], detail['id']))
+            invested = detail['cost'] * detail['quantity']
+            query = "UPDATE data_report SET invested=invested+%s"
+            Database.execute(query, (invested,))
             Database.connection.commit()
             pass
         print(f"Successfully completed operation {ops}")
