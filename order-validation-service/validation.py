@@ -5,6 +5,7 @@ import database_connector
 import datetime
 import threading
 import json
+import time
 
 dotenv.load_dotenv()
 
@@ -26,16 +27,13 @@ DB_NAME = os.getenv('DB_NAME')
 
 
 def send_heart_beat(mq_connection):
-    channel = mq_connection.channel()
-    channel.queue_declare(queue=RABBITMQ_QUEUE_HEALTH)
-
     data = { 
         "id": NODE_ID,
         "node": NODE_NAME,
         "checkpoint": str(datetime.datetime.now()),
     }
     try:
-        channel.basic_publish(exchange='', routing_key=RABBITMQ_QUEUE_HEALTH, body=json.dumps(data))
+        mq_connection.produce(data)
     except Exception as e:
         print(e)
     pass
@@ -43,6 +41,7 @@ def send_heart_beat(mq_connection):
 def life():
     producer = rabbitmq_connector.Connector(port=RABBITMQ_PORT,queue=RABBITMQ_QUEUE_HEALTH,host=RABBITMQ_HOST)
     while True:
+        time.sleep(int(INTERVAL))
         send_heart_beat(producer)
 
 

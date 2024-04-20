@@ -16,6 +16,21 @@ export default function Health() {
         setNodeData(data);
       })
       .catch((err) => console.log(err));
+
+    const interval = setInterval(() => {
+      fetch("http://localhost:3000/api/health")
+        .then((response) => response.json())
+        .then((data) => {
+          for (let i = 0; i < data.length; i++) {
+            data[i].checkpoint = new Date(data[i].checkpoint);
+          }
+          data.sort((a, b) => b.checkpoint - a.checkpoint);
+          setNodeData(data);
+        })
+        .catch((err) => console.log(err));
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
   return (
     <main className="w-screen">

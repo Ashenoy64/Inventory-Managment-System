@@ -3,7 +3,8 @@ import os
 import dotenv
 import json
 import time
-
+import datetime
+import rabbitmq_connector
 dotenv.load_dotenv()
 
 
@@ -65,17 +66,17 @@ def get_report():
     return data
 
 
-def heartbeat(mq_connection):
+def heartbeat():
+    producer = rabbitmq_connector.Connector(port=os.getenv("RABBITMQ_PORT"),queue=os.getenv("RABBITMQ_QUEUE_HEALTH"),host=os.getenv("RABBITMQ_HOST"))
     data = {
         "id": os.getenv('NODE_ID'),
         "node": os.getenv('NODE_NAME'),
-    }
-    channel = mq_connection.channel()
-    channel.queue_declare(queue=os.getenv('RABBITMQ_QUEUE_HEALTH'))
+        "checkpoint": str(datetime.datetime.now()),
+    }   
     while True:
         time.sleep(int(os.getenv('INTERVAL')))
         try:
-            channel.basic_publish(exchange='', routing_key=os.getenv(
-                'RABBITMQ_QUEUE_HEALTH'), body=json.dumps(data))
+            print("Sending Heartbeat")
+            producer.produce(data)
         except Exception as e:
             print(e)

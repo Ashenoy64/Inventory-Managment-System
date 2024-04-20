@@ -14,8 +14,6 @@ def dashboard():
     revenue = float(report['report'][1])
     investment = float(report['report'][0])
 
-
-    print(report)
     with st.container():
         col1, col2= st.columns(2)
         with col1:
@@ -182,10 +180,15 @@ def products():
        
 
 if __name__ == "__main__":
-    if 'health' not in st.session_state:
-        st.session_state.health = threading.Thread(target=backend.life)
+   
+
     if 'producer' not in st.session_state:
         st.session_state.producer = rabbitmq_connector.Connector(port=os.getenv("RABBITMQ_PORT"),queue=os.getenv("RABBITMQ_QUEUE_PRODUCT"),host=os.getenv("RABBITMQ_HOST"))
+    
+    if 'health' not in st.session_state:
+        st.session_state.health = threading.Thread(target=backend.heartbeat)
+        st.session_state.health.start()
+        
     st.title("Product Management Service",anchor="top")
     page = st.sidebar.radio("Navigation", ("Dashboard", "Orders","Products"))
     

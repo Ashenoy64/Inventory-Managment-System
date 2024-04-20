@@ -31,17 +31,13 @@ DB_NAME = os.getenv('DB_NAME')
 
 
 def send_heart_beat(mq_connection):
-    channel = mq_connection.channel()
-    channel.queue_declare(queue=RABBITMQ_QUEUE_HEALTH)
-
     data = {
         "id": NODE_ID,
         "node": NODE_NAME,
         "checkpoint": str(datetime.datetime.now()),
     }
     try:
-        channel.basic_publish(
-            exchange='', routing_key=RABBITMQ_QUEUE_HEALTH, body=json.dumps(data))
+        mq_connection.produce(data)
     except Exception as e:
         print(e)
     pass
