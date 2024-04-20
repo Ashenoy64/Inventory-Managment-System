@@ -1,79 +1,42 @@
 version: '3.8'
-
 services:
+
   rabbitmq:
     image: "rabbitmq"
     networks:
       inventory-managment-network:
-        ipv4_address: 172.14.0.1
+        ipv4_address: 172.16.0.1
     ports:
       - "5672:5672"
       - "15672:15672"
+
 
   database:
     build:
       context: ./database
     networks:
       inventory-managment-network:
-        ipv4_address: 172.14.0.2
+        ipv4_address: 172.16.0.2
     environment:
       POSTGRES_USER: root
       POSTGRES_DB: Products
       POSTGRES_PASSWORD: root
-      RABBITMQ_HOST: 172.14.0.1
+      RABBITMQ_HOST: 172.16.0.1
       RABBITMQ_PORT: 5672
     ports:
       - "5432:5432"
     depends_on:
       - rabbitmq
-  
   create-update:
     build:
-      context: ./CreateAndUpdate
-    networks:
-      inventory-managment-network:
-        ipv4_address: 172.14.0.3
+      context: ./create-and-update
     environment:
-      - DB_USER: root
-      - DB_PASS: root
-      - DB_HOST: 172.14.0.2
-      - DB_PORT: 5432
-      - RABBITMQ_HOST: 172.14.0.1
-      - RABBITMQ_PORT: 5672
-    depends_on:
-      - rabbitmq
-      - database
-
-  health-manager:
-    build:
-      context: ./health-check-service
-    networks:
-      inventory-managment-network:
-        ipv4_address: 172.14.0.4
-    environment:
-      - DB_USER: root
-      - DB_PASSWORD: root
-      - DB_HOST: 172.14.0.2
-      - DB_PORT: 5432
-      - RABBITMQ_HOST: 172.14.0.1
-      - RABBITMQ_PORT: 5672
-    depends_on:
-      - rabbitmq
-      - database
-
-  order-validator:
-    build:
-      context: ./order-validation-service
-    networks:
-      inventory-managment-network:
-        ipv4_address: 172.14.0.5
-    environment:
-      - DB_USER: root
-      - DB_PASSWORD: root
-      - DB_HOST: 172.14.0.2
-      - DB_PORT: 5432
-      - RABBITMQ_HOST: 172.14.0.1
-      - RABBITMQ_PORT: 5672
+      - DB_USER=root
+      - DB_PASS=root
+      - DB_HOST=database
+      - DB_PORT=5432
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
     depends_on:
       - rabbitmq
       - database
@@ -81,18 +44,29 @@ services:
   frontend:
     build:
       context: ./producer-service
-    networks:
-      inventory-managment-network:
-        ipv4_address: 172.14.0.6
     environment:
-      - DB_USER: root
-      - DB_PASSWORD: root
-      - DB_HOST: 172.14.0.2
-      - DB_PORT: 5432
-      - RABBITMQ_HOST: 172.14.0.1
-      - RABBITMQ_PORT: 5672
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_HOST=database
+      - DB_PORT=5432
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
     ports:
       - "3000:3000"
+    depends_on:
+      - rabbitmq
+      - database
+
+  health-manager:
+    build:
+      context: ./health-check-service
+    environment:
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_HOST=database
+      - DB_PORT=5432
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
     depends_on:
       - rabbitmq
       - database
@@ -100,28 +74,38 @@ services:
   inventory-manager:
     build:
       context: ./product-managment-service
-    networks:
-      inventory-managment-network:
-        ipv4_address: 172.14.0.7
     environment:
-      - DB_USER: root
-      - DB_PASSWORD: root
-      - DB_HOST: 172.14.0.2
-      - DB_PORT: 5432
-      - RABBITMQ_HOST: 172.14.0.1
-      - RABBITMQ_PORT: 5672
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_HOST=database
+      - DB_PORT=5432
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
     ports:
       - "8501:8501"
     depends_on:
       - rabbitmq
       - database
 
-  networks:
+  order-validator:
+    build:
+      context: ./order-validation-service
+    environment:
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_HOST=database
+      - DB_PORT=5432
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+    depends_on:
+      - rabbitmq
+      - database
+
+networks:
     inventory-managment-network:
       name: inventory-managment-network
       driver: bridge
       ipam:
         driver: default
         config:
-          - subnet: 172.14.0.0/16
-
+          - subnet: 172.16.0.0/16
