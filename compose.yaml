@@ -5,7 +5,7 @@ services:
     image: "rabbitmq"
     networks:
       inventory-managment-network:
-        ipv4_address: 172.14.0.1
+        ipv4_address: 20.14.0.2
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -15,15 +15,15 @@ services:
       context: ./database
     networks:
       inventory-managment-network:
-        ipv4_address: 172.14.0.2
+        ipv4_address: 20.14.0.3
     environment:
       - POSTGRES_USER=root
       - POSTGRES_DB=Products
       - POSTGRES_PASSWORD=root
-      - RABBITMQ_HOST=172.14.0.1
+      - RABBITMQ_HOST=20.14.0.2
       - RABBITMQ_PORT=5672
     ports:
-      - "5432:5432"
+      - "5433:5432"
     depends_on:
       - rabbitmq
   
@@ -32,13 +32,13 @@ services:
       context: ./CreateAndUpdate
     networks:
       inventory-managment-network:
-        ipv4_address: 172.14.0.3
+        ipv4_address: 20.14.0.8
     environment:
       - DB_USER=root
       - DB_PASS=root
-      - DB_HOST=172.14.0.2
-      - DB_PORT=5432
-      - RABBITMQ_HOST=172.14.0.1
+      - DB_HOST=20.14.0.3
+      - DB_PORT=5433
+      - RABBITMQ_HOST=20.14.0.2
       - RABBITMQ_PORT=5672
     depends_on:
       - rabbitmq
@@ -49,13 +49,13 @@ services:
       context: ./health-check-service
     networks:
       inventory-managment-network:
-        ipv4_address: 172.14.0.4
+        ipv4_address: 20.14.0.4
     environment:
       - DB_USER=root
       - DB_PASSWORD=root
-      - DB_HOST=172.14.0.2
-      - DB_PORT=5432
-      - RABBITMQ_HOST=172.14.0.1
+      - DB_HOST=20.14.0.3
+      - DB_PORT=5433
+      - RABBITMQ_HOST=20.14.0.2
       - RABBITMQ_PORT=5672
     depends_on:
       - rabbitmq
@@ -66,13 +66,13 @@ services:
       context: ./order-validation-service
     networks:
       inventory-managment-network:
-        ipv4_address: 172.14.0.5
+        ipv4_address: 20.14.0.5
     environment:
       - DB_USER=root
       - DB_PASSWORD=root
-      - DB_HOST=172.14.0.2
-      - DB_PORT=5432
-      - RABBITMQ_HOST=172.14.0.1
+      - DB_HOST=20.14.0.3
+      - DB_PORT=5433
+      - RABBITMQ_HOST=20.14.0.2
       - RABBITMQ_PORT=5672
     depends_on:
       - rabbitmq
@@ -83,13 +83,13 @@ services:
       context: ./producer-service
     networks:
       inventory-managment-network:
-        ipv4_address: 172.14.0.6
+        ipv4_address: 20.14.0.6
     environment:
       - DB_USER=root
       - DB_PASSWORD=root
-      - DB_HOST=172.14.0.2
-      - DB_PORT=5432
-      - RABBITMQ_HOST=172.14.0.1
+      - DB_HOST=20.14.0.3
+      - DB_PORT=5433
+      - RABBITMQ_HOST=20.14.0.2
       - RABBITMQ_PORT=5672
     ports:
       - "3000:3000"
@@ -102,13 +102,13 @@ services:
       context: ./product-managment-service
     networks:
       inventory-managment-network:
-        ipv4_address: 172.14.0.7
+        ipv4_address: 20.14.0.7
     environment:
       - DB_USER=root
       - DB_PASSWORD=root
-      - DB_HOST=172.14.0.2
-      - DB_PORT=5432
-      - RABBITMQ_HOST=172.14.0.1
+      - DB_HOST=20.14.0.3
+      - DB_PORT=5433
+      - RABBITMQ_HOST=20.14.0.2
       - RABBITMQ_PORT=5672
     ports:
       - "8501:8501"
@@ -123,5 +123,5 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 172.14.0.0/16
+        - subnet: 20.14.0.0/16
 

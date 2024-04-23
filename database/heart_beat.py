@@ -40,6 +40,7 @@ def send_heart_beat(mq_connection):
 
 
 if __name__ == "__main__":
+    mq_connection = None
     try:
         mq_connection = pika.BlockingConnection(
             pika.ConnectionParameters(host=RABBITMQ_HOST, port=RABBITMQ_PORT))
@@ -52,4 +53,5 @@ if __name__ == "__main__":
         mq_connection.close()
     except Exception as e:
         print(e)
-        mq_connection.close()
+        if(mq_connection is not None):
+            mq_connection.close()

@@ -1,22 +1,14 @@
-ARG NODE_VERSION=18.17.0
+FROM node:18
 
-FROM node:${NODE_VERSION}-alpine
-
-ENV NODE_ENV production
 ENV DATABASE_NAME=inventory
 ENV RABBITMQ_QUEUE_VALIDATION=validate
 
-WORKDIR /usr/src/app
 
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev
-
-USER node
-
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
 COPY . .
-
 EXPOSE 3000
-
 CMD npm run dev
+
+
