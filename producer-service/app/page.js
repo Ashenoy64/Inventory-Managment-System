@@ -8,7 +8,7 @@ export default function Home() {
   const [grandTotal, setGrandTotal] = useState(0)
   useEffect(() => {
     fetch('http://localhost:3000/api/products')
-      .then(response => response.json())
+      .then(response =>{console.log(response); return response.json()})
       .then(data => { setProducts(data) })
   }, [])
 

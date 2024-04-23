@@ -3,7 +3,7 @@ CREATE TABLE Products (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
-    quantity INT NOT NULL,
+    quantity INT NOT NULL
 );
 
 -- Create the Node Details table
@@ -19,8 +19,7 @@ CREATE TABLE OrderDetails (
     id SERIAL PRIMARY KEY,
     order_date DATE NOT NULL,
     total DECIMAL(10, 2) DEFAULT 0.00,
-    status VARCHAR(255) NOT NULL,
-
+    status VARCHAR(255) NOT NULL
 );
 
 -- Order Items Table
@@ -126,6 +125,8 @@ INSERT INTO DATA_REPORT (invested, revenue) VALUES (79791.67, 9180.00);
 
 
 
+-- Change the starting value of the serial column to a new_value
+ALTER SEQUENCE OrderDetails_id_seq RESTART WITH 14;
 
 
 

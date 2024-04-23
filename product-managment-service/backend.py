@@ -38,7 +38,7 @@ def restock_product(product_id, quantity,price, mq_connection):
         'id': product_id,
         'quantity': quantity,
         'cost': price,
-        'price': price * 1+os.getenv('PROFIT_MARGIN'),
+        'price': round(price * (1+float(os.getenv('PROFIT_MARGIN'))),1),
     }
     mq_connection.produce(data)
 
@@ -59,7 +59,7 @@ def add_new_product(name, quantity, price, mq_connection):
         'name': name,
         'quantity': quantity,
         'cost': price,
-        'price': price * 1+os.getenv('PROFIT_MARGIN'),
+        'price': round(price * (1+float(os.getenv('PROFIT_MARGIN'))),1),
     }
     mq_connection.produce(data)
 

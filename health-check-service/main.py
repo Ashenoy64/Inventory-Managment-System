@@ -13,6 +13,7 @@ Database = database_connector.Connector()
 def process_message(body):
     Database.upsert(body['id'], body["node"], datetime.datetime.strptime(
         body['checkpoint'], '%Y-%m-%d %H:%M:%S.%f'))
+    Database.conn.commit()
 
 
 def self_heartbeat():

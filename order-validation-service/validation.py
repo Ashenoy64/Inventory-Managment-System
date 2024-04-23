@@ -39,7 +39,7 @@ def send_heart_beat(mq_connection):
     pass
 
 def life():
-    producer = rabbitmq_connector.Connector(port=RABBITMQ_PORT,queue=RABBITMQ_QUEUE_HEALTH,host=RABBITMQ_HOST)
+    producer = rabbitmq_connector.Connector(port=int(RABBITMQ_PORT),queue=RABBITMQ_QUEUE_HEALTH,host=RABBITMQ_HOST)
     while True:
         time.sleep(int(INTERVAL))
         send_heart_beat(producer)
@@ -58,7 +58,8 @@ def add_order(cart,status="pending"):
         update_query = "UPDATE products SET quantity = quantity - %s WHERE id = %s"
         for item in cart:
             Database.execute(add_query,(order_id,item['id'],item['quantity']))
-            Database.execute(update_query,(item['quantity'],item['id']))
+            if(status != "Failed"):
+                Database.execute(update_query,(item['quantity'],item['id']))
         Database.connection.commit()
     except Exception as e:
         print(e)

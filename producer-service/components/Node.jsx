@@ -5,7 +5,7 @@ export function Node({ node }) {
       <div className="p-1">{node.id}</div>
       <div className="p-1">{node.node_name}</div>
       <div className={`p-1 font-semibold ${parseInt(time) > 15000 ? "text-error" : "text-success"} `}>
-        {time}
+        {parseInt(time)-19800000 }
       </div>
     </div>
   );
