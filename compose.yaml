@@ -8,9 +8,9 @@ services:
     environment:
       - DB_USER=root
       - DB_PASS=root
-      - DB_HOST=10.30.202.87
+      - DB_HOST=10.30.201.82
       - DB_PORT=5433
-      - RABBITMQ_HOST=10.30.202.87
+      - RABBITMQ_HOST=10.30.201.82
       - RABBITMQ_PORT=5672
 
   rabbit:
@@ -38,9 +38,9 @@ services:
     environment:
       - DB_USER=root
       - DB_PASSWORD=root
-      - DB_HOST=10.30.202.87
+      - DB_HOST=10.30.201.82
       - DB_PORT=5433
-      - RABBITMQ_HOST=10.30.202.87
+      - RABBITMQ_HOST=10.30.201.82
       - RABBITMQ_PORT=5672
     
 
@@ -50,9 +50,9 @@ services:
     environment:
       - DB_USER=root
       - DB_PASSWORD=root
-      - DB_HOST=10.30.202.87
+      - DB_HOST=10.30.201.82
       - DB_PORT=5433
-      - RABBITMQ_HOST=10.30.202.87
+      - RABBITMQ_HOST=10.30.201.82
       - RABBITMQ_PORT=5672
 
 
@@ -63,9 +63,9 @@ services:
     environment:
       - DB_USER=root
       - DB_PASSWORD=root
-      - DB_HOST=10.30.202.87
+      - DB_HOST=10.30.201.82
       - DB_PORT=5433
-      - RABBITMQ_HOST=10.30.202.87
+      - RABBITMQ_HOST=10.30.201.82
       - RABBITMQ_PORT=5672
     ports:
       - "8501:8501"
