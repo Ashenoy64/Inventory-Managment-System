@@ -8,27 +8,11 @@ services:
     environment:
       - DB_USER=root
       - DB_PASS=root
-      - DB_HOST=10.30.201.82
+      - DB_HOST=<IP-ADDR>
       - DB_PORT=5433
-      - RABBITMQ_HOST=10.30.201.82
+      - RABBITMQ_HOST=<IP-ADDR>
       - RABBITMQ_PORT=5672
 
-  rabbit:
-    image: rabbitmq
-    ports:
-      - "5679:5672"
-      - "15679:15672"
-
-  potgres:
-    image: postgres
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-    ports:
-      - "5839:5432"
-
-  frontend:
-    image: node:14
    
 
   health-manager:
@@ -38,9 +22,9 @@ services:
     environment:
       - DB_USER=root
       - DB_PASSWORD=root
-      - DB_HOST=10.30.201.82
+      - DB_HOST=<IP-ADDR>
       - DB_PORT=5433
-      - RABBITMQ_HOST=10.30.201.82
+      - RABBITMQ_HOST=<IP-ADDR>
       - RABBITMQ_PORT=5672
     
 
@@ -50,9 +34,9 @@ services:
     environment:
       - DB_USER=root
       - DB_PASSWORD=root
-      - DB_HOST=10.30.201.82
+      - DB_HOST=<IP-ADDR>
       - DB_PORT=5433
-      - RABBITMQ_HOST=10.30.201.82
+      - RABBITMQ_HOST=<IP-ADDR>
       - RABBITMQ_PORT=5672
 
 
@@ -63,9 +47,9 @@ services:
     environment:
       - DB_USER=root
       - DB_PASSWORD=root
-      - DB_HOST=10.30.201.82
+      - DB_HOST=<IP-ADDR>
       - DB_PORT=5433
-      - RABBITMQ_HOST=10.30.201.82
+      - RABBITMQ_HOST=<IP-ADDR>
       - RABBITMQ_PORT=5672
     ports:
       - "8501:8501"
